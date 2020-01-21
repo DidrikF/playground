@@ -1,7 +1,7 @@
 {
-  "name": "coder-cms",
+  "name": "playground",
   "version": "1.0.0",
-  "description": "A content management system for developers to share their work. Built with React, Redux, Koa and MongoDB.",
+  "description": "Repo to experiment with client and server side javascript/typescript",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server",
