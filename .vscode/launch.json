@@ -1,0 +1,46 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Lunch whole app",
+            "configurations": ["Launch Client w/ Debugger", "Launch Server with Nodemon"]
+        }
+    ],
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server with Nodemon",
+            "runtimeExecutable": "nodemon",
+            "program": "${workspaceFolder}\\server\\index.js",
+            "restart": true,
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Client w/ Debugger",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server w/ Debugger",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\server\\index.js",
+            "console": "internalConsole",
+            "env": {
+                "EXAMPLE_VAR": "super_secret_key"
+            },
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

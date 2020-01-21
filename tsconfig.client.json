@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "outDir": "./ts-output/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "module": "es6",
+        "target": "es5",
+        "jsx": "react",
+        "allowJs": true
+    },
+    "include": [
+        "./client/**/*",
+        "./types/**/*"
+    ]
+}

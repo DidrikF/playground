@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        "server/**/{*.js,*.js.map}": true,
+        "types/**/{*.js,*.js.map}": true
+    },
+    "debug.node.autoAttach": "on"
+}
