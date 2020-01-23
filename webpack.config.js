@@ -31,6 +31,10 @@ module.exports = {
                     'sass-loader',
                 ],
             },
+            {
+                test: /\.json$/,
+                loader: 'json-loader'
+            }
         ],
     },
     resolve: {

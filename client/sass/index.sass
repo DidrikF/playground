@@ -1,59 +1,12 @@
-#card 
-    height: 50vmin
-    width: 90vmin
-    background-color: white
-    background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/181794/8442566463_5e3e1714cf_z.jpg)
-    background-size: cover
-    box-shadow: 0 1rem 3rem rgba(black, 0.2)
-    transform-style: preserve-3d
-    // transition: transform 0.4s ease-out;
+* 
+    padding: 0
+    margin: 0
 
-    &:before, &:after 
-        content: ''
-        position: absolute
-        display: block
-        height: 2px
-        width: 2px
-        border-radius: 50%
-        background: rgba(white, 0.2)
-        filter: blur(1px)
-
-    &:before
-        transform: translateZ(8rem)
-        $shadows: ()
-        @for $i from 1 through 10
-            $shadows: append($shadows, random(90) * 1vmin random(50) * 1vmin 0 white, comma)
-        box-shadow: $shadows
-    
-    &:after
-        height: 3px
-        width: 3px
-        transform: translateZ(2rem)
-        $shadows: ()
-        @for $i from 1 through 50 
-            $shadows: append($shadows, random(90) * 1vmin random(50) * 1vmin 0 white, comma)
-        box-shadow: $shadows
+html 
+    height: 100%
+    width: 100%
 
 body
-    display: flex
-    flex-direction: row
-    justify-content: center
-    align-items: center
-    transform-style: preserve-3d
-    perspective: 1000px
-
-
-html, body
-    width: 100%
+    background: #DEF7FF
     height: 100%
-    margin: 0
-    padding: 0
-
-
-html
-    background: linear-gradient(to bottom, #dbe6ed, #cfdde5)
-
-
-*, *:before, *:after
-    box-sizing: border-box
-    position: relative
+    width: 100%
