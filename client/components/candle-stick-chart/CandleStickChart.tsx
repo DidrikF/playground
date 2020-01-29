@@ -5,7 +5,7 @@ import * as axios from 'axios';
 
 import { interval, fromEvent, of } from 'rxjs';
 import {sample, takeUntil, concatAll, map, throttleTime, pluck, mapTo, expand, take, delay, switchMap, tap, reduce, pairwise} from 'rxjs/operators';
-import { scaleLinear } from 'd3';
+import { scaleLinear, zoom } from 'd3';
 import scale, { scaleTime } from 'd3-scale';
 
 
@@ -41,6 +41,7 @@ export interface CandleStickChartConfig {
 export interface CandleStickChartProps {
     data: PriceData[] | string;
     config?: CandleStickChartConfig;
+    chartType: 'svg' | 'canvas';
 }
 
 export interface CandleStickChartState {
@@ -74,11 +75,20 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
     chartWidth: number;
     chartHeight: number;
     chart: d3.Selection<SVGSVGElement, Date, HTMLElement, Date>;
+    xAxisGroup: d3.Selection<any, any, any, any>;
+    yAxisGroup: d3.Selection<any, any, any, any>;
+    contentGroup: d3.Selection<any, any, any, any>;
+
+    width: number;
+    height: number;
+    margin: Margin;
+
 
     startDate: Date;
     endDate: Date;
 
     selectedData: PriceData[];
+
 
     static defaultProps: Partial<CandleStickChartProps> = {
         config: {
@@ -119,16 +129,56 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
     }
 
     handeZoom = (zoomAmount: any) => {
+        let data = this.state.data
+        console.log("Start: ", data[0].date, " End: ", data[data.length - 1].date)
 
+        if (zoomAmount > 0) {
+            const newStart = moment(data[0].date).add(1, 'year').toDate();
+            const newEnd = moment(data[data.length - 1].date).subtract(1, 'year').toDate();
+            console.log("newStart: ", newStart, " newEnd: ", newEnd)
+            this.updateChart(newStart, newEnd);
+        } else {
+
+        }
     }
 
     handleDrag = (dragDistances: any) => {
 
     }
 
+    initChart() {
+        this.width = document.body.clientWidth;
+        this.height = this.width * 9/16;
+        this.margin = {top: 40, right: 40, bottom: 40, left: 40};
 
-    updateChart() {
+        this.chart = d3.select('#chart-svg');
+        this.chart
+            .attr('width', this.width)
+            .attr('height', this.height)
+
+        this.xAxisGroup = this.chart.append('g')
+            .attr('transform', `translate(0, ${this.height - this.margin.top})`)
+            
+        this.yAxisGroup = this.chart.append('g')
+            .attr('transform', `translate(${this.margin.left}, 0)`)
+
+
+        // Data join
+        this.contentGroup = this.chart.append('g')
+
+        this.contentGroup
+            .selectAll('g')
+            .data(this.state.data , (d) => (d as any).key) // , (d) => (d as any).date.getTime()
+        
+        console.log(this.contentGroup)
+
+        this.updateChart()
+    }
+
+    updateChart(startDate?: Date, endDate?: Date) {
         // NOTE: unique ID can be a combination of ticker and date
+        // data only need to update if the axes are changed
+        /*
         const startTime = this.startDate.getTime();
         const endTime = this.endDate.getTime();
 
@@ -136,31 +186,66 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
             const time = priceData.date.getTime();
             return (time >= startTime && time <= endTime);
         });
+        */
+        const { margin, width, height } = this;
 
-        const data = this.state.data;
-        const data0 = data[0];
-        const date0 = data0.date;
+        // Update the selected data
+        let data = this.state.data;
+        if (startDate && endDate) {
+            data = data.filter(data => data.date.getTime() > startDate.getTime() && data.date.getTime() < endDate.getTime());
+        }
 
-        const width = document.body.clientWidth;
-        const height = width * 9/16;
-        const margin = {top: 40, right: 40, bottom: 40, left: 40};
+        // Make new scales
+        const maxPrice = data.map(priceData => priceData.high).reduce((max, curr) => curr > max ? curr : max);
+        const minPrice = data.map(priceData => priceData.low).reduce((min, curr) => curr < min ? curr : min);
 
-        const x = d3.scaleBand()
-            .domain(d3.timeDay // WTF, god damn
-                .range(date0, date0)
-                .filter(d => d.getDay() !== 0 && d.getDay() !== 6))
+        const x = d3.scaleTime()
+            .domain([data[0].date, data[data.length-1].date])
+            .range([margin.left, width - margin.right]);
+        const y = d3.scaleLinear()
+            .domain([minPrice, maxPrice])
+            .range([height - margin.bottom, margin.top]);
+        
+        // Update axis
+        this.xAxisGroup.call(d3.axisBottom(x))
+        this.yAxisGroup.call(d3.axisLeft(y))
 
-        const xAxis = g => g
-            .attr('transform', `translate(${margin.left}, ${height - margin.bottom}`)
-            .call(d3.axisBottom(x))
+        // Update chart content (D3 update pattern)
+        // Join new data with old elements, if any
+        const dataElements = this.contentGroup
+            .selectAll('g')
+            .data(data , (d) => (d as any).key)
+        
+        console.log("dataElements: ", dataElements);
+        console.log('data: ', data)
+        
+        // Remove old elements as needed
+        dataElements.exit().remove();
 
+        // Update old elements as needed
+        dataElements.selectAll('line')           
+            .attr("transform", d => `translate(${x((d as any).date)}, 0)`)
 
-        this.chart = d3.select('#chart-svg');
+        // Create new elements as needed
+        dataElements.enter().append('line')
+            .attr('y1', d => y(d.low))
+            .attr('y2', d => y(d.high))
+            .attr('class', 'low-high')
+            .attr("stroke-linecap", "round")
+            .attr('stroke', 'black')           
+            .attr("transform", d => `translate(${x(d.date)}, 0)`)
 
-        this.chart.append('g').call(xAxis);
-        this.chart.append('g').call(yAxis);
+        dataElements.enter().append('line')
+            .attr('y1', d => y(d.open))
+            .attr('y2', d => y(d.close))
+            .attr('stroke', d => d.close > d.open ? this.props.config.candleBodyColorUp : this.props.config.candleStemColorDown)
+            .attr('stroke-width', 3)
+            .attr("transform", d => `translate(${x(d.date)}, 0)`)
 
-        this.draw()
+        console.log(data[0].date, " -> ", x(data[0].date), ' = ', margin.left);
+        console.log(minPrice, ' -> ', y(minPrice), ' = ', margin.bottom);
+
+        // this.draw()
     }
 
     draw() {
@@ -173,7 +258,7 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
                 .then(response => {
                     return response.json();
                 }).then(priceData => {
-                    const parsedPriceData = priceData.map((el) => {
+                    const parsedPriceData = priceData.map((el, i) => {
                         const newEl = {};
                         newEl['date'] = new Date(el.date);
                         newEl['open'] = parseFloat(el.open);
@@ -181,17 +266,18 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
                         newEl['low'] =parseFloat(el.low);
                         newEl['close'] = parseFloat(el.close);
                         newEl['volume'] = parseInt(el.volume, 10);
+                        newEl['key'] = i;
                         return newEl as PriceData;
                     })
                     
                     this.setState({
                         data: parsedPriceData
-                    }, this.updateChart);    
+                    }, this.initChart);    
                 });
         } else {
             this.setState({
                 data: this.props.data
-            }, this.updateChart);
+            }, this.initChart);
         }
     }
 
@@ -215,10 +301,20 @@ export default class CandleStickChart extends React.Component<CandleStickChartPr
     render() {
        return (
             <>
-                <div id='canvas-container'>
-                    <svg id='chart-svg'></svg>
-                    <canvas id="chart-canvas"></canvas>
+                <div id='chart-container'>
+                    { this.props.chartType === 'svg' &&
+                        <svg id='chart-svg'></svg>
+                    }
+                    { this.props.chartType === 'canvas' &&
+                        <canvas id="chart-canvas"></canvas>
+                    }
                 </div>
+                <button onClick={() => this.handeZoom(1)}>
+                    Zoom in
+                </button>
+                <button onClick={() => this.handeZoom(-1)}>
+                    Zoom out
+                </button>
             </>
        );
     }

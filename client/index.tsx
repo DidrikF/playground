@@ -15,7 +15,7 @@ import './sass/index.sass';
 import './components/candle-stick-chart/sass/candlestick-chart.sass';
 
 
-ReactDOM.render(<CandleStickChart data='apple-price-data.json' />, document.getElementById('root'));
+ReactDOM.render(<CandleStickChart data='apple-price-data.json' chartType='svg' />, document.getElementById('root'));
 
 
 
