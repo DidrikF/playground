@@ -10,17 +10,20 @@ import Animations from './components/animated-card/Animations';
 import CandleStickChart, { PriceData } from './components/candle-stick-chart/CandleStickChart';
 
 
+import { Phone } from './components/phone-navigation/Phone';
+
+
 
 import './sass/index.sass';
 import './components/candle-stick-chart/sass/candlestick-chart.sass';
+import './components/phone-navigation/sass/phone.sass';
 
 
-ReactDOM.render(<CandleStickChart data='apple-price-data.json' chartType='svg' />, document.getElementById('root'));
-
-
+ReactDOM.render(<Phone />, document.getElementById('root'));
 
 
 /*
+ReactDOM.render(<CandleStickChart data='apple-price-data.json' chartType='svg' />, document.getElementById('root'));
 
 ReactDOM.render(
     <Provider store={store}>
