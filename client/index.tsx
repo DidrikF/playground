@@ -1,26 +1,22 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import { Provider } from 'react-redux';
+// import { Provider } from 'react-redux';
 
-import RXJSPractice from './RXJSPractice';
-import RXJSGame from './RXJSGame';
-import SearchBox from './SearchBox';
-import { store } from './SearchBox';
-import Animations from './components/animated-card/Animations';
-import CandleStickChart, { PriceData } from './components/candle-stick-chart/CandleStickChart';
-
-
-import { Phone } from './components/phone-navigation/Phone';
+// import RXJSPractice from './RXJSPractice';
+// import RXJSGame from './RXJSGame';
+// import SearchBox from './SearchBox';
+// import { store } from './SearchBox';
+// import Animations from './components/animated-card/Animations';
+// import CandleStickChart, { PriceData } from './components/candle-stick-chart/CandleStickChart';
+// import { Phone } from './components/phone-navigation/Phone';
 
 
+// import './sass/index.sass';
+// import './components/candle-stick-chart/sass/candlestick-chart.sass';
+// import './components/phone-navigation/sass/phone.sass';
 
-import './sass/index.sass';
-import './components/candle-stick-chart/sass/candlestick-chart.sass';
-import './components/phone-navigation/sass/phone.sass';
 
-
-ReactDOM.render(<Phone />, document.getElementById('root'));
-
+// ReactDOM.render(<Phone />, document.getElementById('root'));
 
 /*
 ReactDOM.render(<CandleStickChart data='apple-price-data.json' chartType='svg' />, document.getElementById('root'));
@@ -49,12 +45,22 @@ ReactDOM.render(
 */
 
 
+/* THREE JS GAME */
+import './components/threejs-practice/ThreejsPractice';
+
+
+
+
+
+
+
+
+
+
 
 
 /*
-
 Might add normalizr later, if I see that the benefits outweights the cost of implementation.
 Do remember that this simplifies the reducer logic, as the data structure will be less nested
 and less objects and arrays must be recreated (casing better performance)
-
 */

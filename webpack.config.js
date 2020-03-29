@@ -4,7 +4,6 @@ module.exports = {
     mode: 'development',
     entry: {
         app: './client/index.tsx', 
-        game: './client/game.ts'
     },
     devtool: 'inline-source-map',
     devServer: {
