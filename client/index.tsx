@@ -1,5 +1,10 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
+import BlockNavigationTest from './components/block-navigation-test/BlockNavigationTest';
+
+// import RPGGame from './components/rpg-game/RPGGame';
+
+
 // import { Provider } from 'react-redux';
 
 // import RXJSPractice from './RXJSPractice';
@@ -45,8 +50,14 @@ ReactDOM.render(
 */
 
 
+
+
+
+ReactDOM.render(<BlockNavigationTest />, document.getElementById('root'));
+
 /* THREE JS GAME */
-import './components/threejs-practice/ThreejsPractice';
+// import './components/threejs-practice/ThreejsPractice';
+
 
 
 
