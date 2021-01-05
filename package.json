@@ -42,7 +42,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.1.0",
     "@types/three": "^0.103.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "d3": "^5.15.0",
     "d3-scale": "^3.2.1",
     "gsap": "^3.0.4",
