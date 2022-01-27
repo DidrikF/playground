@@ -60,7 +60,7 @@
     "redux-observable": "^1.2.0",
     "rxjs": "^6.5.4",
     "stats-js": "^1.0.1",
-    "three": "^0.115.0",
+    "three": "^0.137.0",
     "three-fbx-loader": "^1.0.3",
     "three-orbit-controls": "^82.1.0"
   }
